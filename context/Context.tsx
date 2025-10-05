@@ -9,20 +9,20 @@ const ExpensesDispatchContext = createContext<React.ActionDispatch<[action: Expe
 type CategoriesAction = {
     type: string;
     id: number;
-    categoryTitle: string;
+    categoryTitle?: string;
 }
 
 type ExpensesAction = {
     type: string;
     id: number;
-    expenseTitle: string;
-    expenseAmount: number;
+    expenseTitle?: string;
+    expenseAmount?: number;
 }
 
 const categoriesReducer: Reducer<string[], CategoriesAction> = (prevState, action): string[] => {
     switch (action.type) {
         case 'add':
-            return [...prevState, action.categoryTitle];
+            return [...prevState, action.categoryTitle!];
         case 'delete':
             const newState = prevState.filter(state => state !== action.categoryTitle);
             return newState;
@@ -33,7 +33,7 @@ const categoriesReducer: Reducer<string[], CategoriesAction> = (prevState, actio
 const expensesReducer: Reducer<ExpenseInterface[], ExpensesAction> = (prevState, action): ExpenseInterface[] => {
     switch (action.type) {
         case 'add':
-            return [...prevState, { title: action.expenseTitle, amount: action.expenseAmount }]
+            return [...prevState, { title: action.expenseTitle!, amount: action.expenseAmount! }]
         case 'delete':
             const newState = prevState.filter(state => state.title !== action.expenseTitle);
             return newState;
@@ -65,4 +65,6 @@ export function ContextProvider({ children }: ContextProviderProps) {
 }
 
 export const useCategories = () => useContext(CategoriesContext);
+export const useDispatchCategories = () => useContext(CategoriesDispatchContext);
 export const useExpenses = () => useContext(ExpensesContext);
+export const useDispatchExpenses = () => useContext(ExpensesDispatchContext);

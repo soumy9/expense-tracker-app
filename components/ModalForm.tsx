@@ -1,17 +1,18 @@
 import { PropsWithChildren } from "react";
 import { Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
-type NewExpenseProps = PropsWithChildren<{
+type ModalFormProps = PropsWithChildren<{
     isVisible: boolean;
     onClose: () => void;
+    title: string;
 }>
 
-function NewExpense({ isVisible, onClose, children }: NewExpenseProps) {
+function ModalForm({ title, isVisible, onClose, children }: ModalFormProps) {
     return (<View>
         <Modal animationType="slide" transparent={true} visible={isVisible}>
             <View style={styles.modalContent}>
                 <View style={styles.titleContainer}>
-                    <Text style={styles.titleText}>Add new expense</Text>
+                    <Text style={styles.titleText}>{title}</Text>
                     <Pressable onPress={onClose}>
                         <Text style={styles.titleText}>Close</Text>
                     </Pressable>
@@ -22,7 +23,7 @@ function NewExpense({ isVisible, onClose, children }: NewExpenseProps) {
     </View >)
 }
 
-export default NewExpense;
+export default ModalForm;
 
 
 const styles = StyleSheet.create({

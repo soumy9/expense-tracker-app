@@ -1,23 +1,46 @@
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { Picker } from '@react-native-picker/picker';
+import { useCategories, useDispatchExpenses } from "@/context/Context";
+import { useState } from "react";
 
 type NewExpenseFormProps = {
-    onAddNewExpense: ()=>void;
-}
+    onSave: () => void;
+};
 
-function NewExpenseForm({onAddNewExpense}: NewExpenseFormProps) {
+export default function NewExpenseForm({ onSave }: NewExpenseFormProps) {
+    const categories = useCategories();
+    const [expenseTitle, setExpenseTitle] = useState<string>(categories?.[0] || '');
+    const [expenseAmount, setExpenseAmount] = useState<number>(0);
+
+    const dispatchExpense = useDispatchExpenses();
+    const addNewExpenseHandler = () => {
+        dispatchExpense?.({
+            type: 'add',
+            expenseAmount: expenseAmount,
+            expenseTitle: expenseTitle,
+            id: 1
+        });
+
+        onSave();
+    }
+
+    const expenseAmountChangeHandler = (text: number) => {
+        setExpenseAmount(text);
+    }
+
     return (
         <View>
             <Text style={styles.formInputLabel}>Category</Text>
-            <Picker mode="dialog">
-                <Picker.Item key={'groceries'} label="Groceries" value={'groceries'} />
-                <Picker.Item key={'electricity'} label="Electricity" value={'electricity'} />
+            <Picker mode="dialog" onValueChange={(itemValue) => setExpenseTitle(itemValue as string)} selectedValue={expenseTitle}>
+                {categories?.map(category => (
+                    <Picker.Item key={category} label={category} value={category} />
+                ))}
             </Picker>
             <View style={styles.formField}>
                 <Text style={styles.formInputLabel}>Amount</Text>
-                <TextInput style={styles.formInput} keyboardType="numeric" />
+                <TextInput style={styles.formInput} keyboardType="numeric" onChangeText={(text) => expenseAmountChangeHandler(Number(text))} value={expenseAmount + ''} />
             </View>
-            <Pressable onPress={onAddNewExpense}>
+            <Pressable onPress={addNewExpenseHandler}>
                 <Text>
                     Add expense
                 </Text>
@@ -25,8 +48,6 @@ function NewExpenseForm({onAddNewExpense}: NewExpenseFormProps) {
         </View>
     )
 }
-
-export default NewExpenseForm;
 
 const styles = StyleSheet.create({
     formField: {
