@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { Picker } from '@react-native-picker/picker';
 import { useCategories, useDispatchExpenses } from "@/context/Context";
 import { useState } from "react";
+import DatePicker from "./DatePicker";
 
 type NewExpenseFormProps = {
     onSave: () => void;
@@ -11,6 +12,7 @@ export default function NewExpenseForm({ onSave }: NewExpenseFormProps) {
     const categories = useCategories();
     const [expenseTitle, setExpenseTitle] = useState<string>(categories?.[0] || '');
     const [expenseAmount, setExpenseAmount] = useState<number>(0);
+    const [expenseDate, setExpenseDate] = useState<Date>(new Date());
 
     const dispatchExpense = useDispatchExpenses();
     const addNewExpenseHandler = () => {
@@ -18,7 +20,8 @@ export default function NewExpenseForm({ onSave }: NewExpenseFormProps) {
             type: 'add',
             expenseAmount: expenseAmount,
             expenseTitle: expenseTitle,
-            id: 1
+            id: 1,
+            date: expenseDate
         });
 
         onSave();
@@ -40,6 +43,7 @@ export default function NewExpenseForm({ onSave }: NewExpenseFormProps) {
                 <Text style={styles.formInputLabel}>Amount</Text>
                 <TextInput style={styles.formInput} keyboardType="numeric" onChangeText={(text) => expenseAmountChangeHandler(Number(text))} value={expenseAmount + ''} />
             </View>
+            <DatePicker />
             <Pressable onPress={addNewExpenseHandler}>
                 <Text>
                     Add expense

@@ -17,6 +17,7 @@ type ExpensesAction = {
     id: number;
     expenseTitle?: string;
     expenseAmount?: number;
+    date: Date;
 }
 
 const categoriesReducer: Reducer<string[], CategoriesAction> = (prevState, action): string[] => {
@@ -33,7 +34,7 @@ const categoriesReducer: Reducer<string[], CategoriesAction> = (prevState, actio
 const expensesReducer: Reducer<ExpenseInterface[], ExpensesAction> = (prevState, action): ExpenseInterface[] => {
     switch (action.type) {
         case 'add':
-            return [...prevState, { title: action.expenseTitle!, amount: action.expenseAmount! }]
+            return [...prevState, { title: action.expenseTitle!, amount: action.expenseAmount!, date: action.date }]
         case 'delete':
             const newState = prevState.filter(state => state.title !== action.expenseTitle);
             return newState;
